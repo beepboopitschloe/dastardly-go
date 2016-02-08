@@ -88,3 +88,7 @@ func (scr *Screen) DrawPanel(x, y, w, h int) {
 	// bottom right corner
 	scr.SetCell(x+w, y+h, '#', fg, bg)
 }
+
+func (scr *Screen) DrawBorder() {
+	scr.DrawPanel(0, 0, scr.width-1, scr.height-1)
+}
