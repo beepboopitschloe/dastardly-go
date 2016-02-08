@@ -1,6 +1,9 @@
 package dastardly
 
-import "github.com/nsf/termbox-go"
+import (
+	"github.com/nmuth/dastardly-go/dastardly/screen"
+	"github.com/nsf/termbox-go"
+)
 
 // import "github.com/nmuth/dastardly-go/dastardly/player"
 
@@ -26,25 +29,25 @@ func Start() {
 
 var showMsg bool
 
-func drawString(str string, x, y int) {
-	for idx, rn := range str {
-		termbox.SetCell(x+idx, y, rn, termbox.ColorWhite, termbox.ColorBlack)
-	}
-}
-
-func draw() {
+func draw(scr *screen.Screen) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	scr.Clear(termbox.ColorDefault, termbox.ColorRed)
 
-	termbox.SetCell(1, 1, '@', termbox.ColorBlack, termbox.ColorWhite)
+	scr.SetCell(19, 19, '@', termbox.ColorBlack, termbox.ColorWhite)
+
+	// scr.DrawPanel(0, 0, 10, 10)
 
 	if showMsg {
-		drawString("Hello, world!", 1, 4)
+		scr.DrawString("Hello, world!", 0, 19)
 	}
 
+	scr.Blit(10, 10)
 	termbox.Flush()
 }
 
 func Start() {
+	mainScreen := screen.NewScreen(20, 20)
+
 	showMsg = false
 
 	err := termbox.Init()
@@ -55,7 +58,7 @@ func Start() {
 
 	termbox.HideCursor()
 
-	draw()
+	draw(mainScreen)
 
 loop:
 	for {
@@ -69,6 +72,6 @@ loop:
 			}
 		}
 
-		draw()
+		draw(mainScreen)
 	}
 }
