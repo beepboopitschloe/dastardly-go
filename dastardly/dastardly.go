@@ -7,13 +7,16 @@ import (
 
 var showMsg bool
 
+var player Entity
+
 func draw(scr *screen.Screen) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 	scr.Clear(termbox.ColorDefault, termbox.ColorRed)
 
 	scr.DrawBorder()
 
-	scr.SetCell(2, 2, '@', termbox.ColorBlack, termbox.ColorWhite)
+	x, y := player.Position()
+	scr.SetCell(x, y, '@', termbox.ColorBlack, termbox.ColorWhite)
 
 	if showMsg {
 		scr.DrawString("Hello, world!", 2, 17)
@@ -27,6 +30,14 @@ func Start() {
 	mainScreen := screen.NewScreen(20, 20)
 
 	showMsg = true
+
+	player = Entity{
+		x:  0,
+		y:  0,
+		Ch: '@',
+		Fg: termbox.ColorWhite,
+		Bg: termbox.ColorDefault,
+	}
 
 	err := termbox.Init()
 	if err != nil {
@@ -47,6 +58,17 @@ loop:
 				break loop
 			case termbox.KeySpace:
 				showMsg = !showMsg
+			}
+
+			switch ev.Ch {
+			case 'h':
+				player.Move(-1, 0)
+			case 'j':
+				player.Move(0, 1)
+			case 'k':
+				player.Move(0, -1)
+			case 'l':
+				player.Move(1, 0)
 			}
 		}
 
