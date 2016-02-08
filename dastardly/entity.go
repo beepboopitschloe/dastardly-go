@@ -1,7 +1,7 @@
 package dastardly
 
 import (
-	"github.com/nmuth/dastardly-go/dastardly/screen"
+	"github.com/nmuth/dastardly-go/screen"
 	tb "github.com/nsf/termbox-go"
 )
 

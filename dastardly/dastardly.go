@@ -1,7 +1,7 @@
 package dastardly
 
 import (
-	"github.com/nmuth/dastardly-go/dastardly/screen"
+	"github.com/nmuth/dastardly-go/screen"
 	"github.com/nsf/termbox-go"
 )
 
@@ -32,8 +32,8 @@ func Start() {
 	showMsg = true
 
 	player = Entity{
-		x:  0,
-		y:  0,
+		x:  2,
+		y:  2,
 		Ch: '@',
 		Fg: termbox.ColorWhite,
 		Bg: termbox.ColorDefault,
