@@ -5,39 +5,59 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-var showMsg bool
+type Game struct {
+	viewPanel,
+	logPanel,
+	infoPanel,
+	otherPanel,
+	smallPopupPanel,
+	largePopupPanel *screen.Screen
 
-var player Entity
+	player *Entity
+}
 
-func draw(scr *screen.Screen) {
+const SCREEN_WIDTH = 100
+const SCREEN_HEIGHT = 40
+
+func draw(game *Game) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-	scr.Clear(termbox.ColorDefault, termbox.ColorRed)
+	game.viewPanel.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	game.logPanel.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	game.infoPanel.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	game.otherPanel.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
-	scr.DrawBorder()
+	game.viewPanel.DrawBorder()
+	game.logPanel.DrawBorder()
+	game.infoPanel.DrawBorder()
+	game.otherPanel.DrawBorder()
 
-	x, y := player.Position()
-	scr.SetCell(x, y, '@', termbox.ColorBlack, termbox.ColorWhite)
+	x, y := game.player.Position()
+	game.viewPanel.SetCell(x, y, '@', termbox.ColorBlack, termbox.ColorWhite)
 
-	if showMsg {
-		scr.DrawString("Hello, world!", 2, 17)
-	}
-
-	scr.Blit(10, 10)
+	game.viewPanel.Blit(40, 0)
+	game.logPanel.Blit(40, 30)
+	game.infoPanel.Blit(0, 0)
+	game.otherPanel.Blit(0, 20)
 	termbox.Flush()
 }
 
-func Start() {
-	mainScreen := screen.NewScreen(20, 20)
+func NewGame() *Game {
+	return &Game{
+		viewPanel:       screen.NewScreen(80, 30),
+		logPanel:        screen.NewScreen(80, 10),
+		otherPanel:      screen.NewScreen(40, 20),
+		infoPanel:       screen.NewScreen(40, 20),
+		smallPopupPanel: screen.NewScreen(3, 80),
+		largePopupPanel: screen.NewScreen(80, 30),
 
-	showMsg = true
-
-	player = Entity{
-		x:  2,
-		y:  2,
-		Ch: '@',
-		Fg: termbox.ColorWhite,
-		Bg: termbox.ColorDefault,
+		player: &Entity{Ch: '@', Fg: termbox.ColorWhite, Bg: termbox.ColorDefault},
 	}
+}
+
+func Start() {
+	game := NewGame()
+
+	game.player.SetPosition(10, 10)
 
 	err := termbox.Init()
 	if err != nil {
@@ -47,7 +67,7 @@ func Start() {
 
 	termbox.HideCursor()
 
-	draw(mainScreen)
+	draw(game)
 
 loop:
 	for {
@@ -56,22 +76,20 @@ loop:
 			switch ev.Key {
 			case termbox.KeyEsc:
 				break loop
-			case termbox.KeySpace:
-				showMsg = !showMsg
 			}
 
 			switch ev.Ch {
 			case 'h':
-				player.Move(-1, 0)
+				game.player.Move(-1, 0)
 			case 'j':
-				player.Move(0, 1)
+				game.player.Move(0, 1)
 			case 'k':
-				player.Move(0, -1)
+				game.player.Move(0, -1)
 			case 'l':
-				player.Move(1, 0)
+				game.player.Move(1, 0)
 			}
 		}
 
-		draw(mainScreen)
+		draw(game)
 	}
 }
