@@ -1,4 +1,4 @@
-package dastardly
+package entity
 
 import (
 	"github.com/nmuth/dastardly-go/screen"

@@ -1,7 +1,7 @@
 package main
 
-import ds "github.com/nmuth/dastardly-go/dastardly"
+import "github.com/nmuth/dastardly-go/game"
 
 func main() {
-	ds.Start()
+	game.NewGame().Run()
 }
