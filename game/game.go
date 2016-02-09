@@ -35,8 +35,6 @@ func (this *Panel) Clear() {
 	this.Screen.Clear(tb.ColorDefault, tb.ColorBlack)
 }
 
-type PanelProcessor func(panel Panel)
-
 type Game struct {
 	ViewPanel,
 	LogPanel,
@@ -73,25 +71,26 @@ func NewGame() *Game {
 func (this *Game) Draw() {
 	tb.Clear(tb.ColorDefault, tb.ColorDefault)
 
-	this.ViewPanel.Clear()
-	this.LogPanel.Clear()
-	this.InfoPanel.Clear()
-	this.OtherPanel.Clear()
-
-	this.ViewPanel.DrawBorder()
-	this.LogPanel.DrawBorder()
-	this.InfoPanel.DrawBorder()
-	this.OtherPanel.DrawBorder()
+	this.ForEachActivePanel(func(p *Panel) {
+		p.Clear()
+		p.DrawBorder()
+	})
 
 	x, y := this.Player.Position()
 	this.ViewPanel.Screen.SetCell(x, y, '@', tb.ColorWhite, tb.ColorBlack)
 
-	this.ViewPanel.Blit()
-	this.LogPanel.Blit()
-	this.InfoPanel.Blit()
-	this.OtherPanel.Blit()
+	this.ForEachActivePanel(func(p *Panel) {
+		p.Blit()
+	})
 
 	tb.Flush()
+}
+
+func (this *Game) ForEachActivePanel(fn func(*Panel)) {
+	fn(this.ViewPanel)
+	fn(this.LogPanel)
+	fn(this.InfoPanel)
+	fn(this.OtherPanel)
 }
 
 func (this *Game) Run() {
