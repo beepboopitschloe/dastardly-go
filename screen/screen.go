@@ -61,10 +61,7 @@ func (scr *Screen) DrawString(str string, x, y int) {
 	}
 }
 
-func (scr *Screen) DrawPanel(x, y, w, h int) {
-	fg := tb.ColorWhite
-	bg := tb.ColorDefault
-
+func (scr *Screen) DrawRect(x, y, w, h int, fg, bg tb.Attribute) {
 	// top border
 	for i := 0; i < w; i++ {
 		scr.SetCell(x+i, y, '#', fg, bg)
@@ -89,6 +86,6 @@ func (scr *Screen) DrawPanel(x, y, w, h int) {
 	scr.SetCell(x+w, y+h, '#', fg, bg)
 }
 
-func (scr *Screen) DrawBorder() {
-	scr.DrawPanel(0, 0, scr.width-1, scr.height-1)
+func (scr *Screen) DrawBorder(fg, bg tb.Attribute) {
+	scr.DrawRect(0, 0, scr.width-1, scr.height-1, fg, bg)
 }
